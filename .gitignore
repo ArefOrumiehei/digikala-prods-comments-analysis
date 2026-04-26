@@ -1,0 +1,8 @@
+# Main Data
+/data
+
+# Virtual Machin
+/venv
+
+# VS code Extentions
+.vscode
