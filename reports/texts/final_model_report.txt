@@ -1,0 +1,35 @@
+FINAL MODEL REPORT
+============================================================
+
+Model              : Tuned (GridSearch)
+Accuracy           : 0.7945
+Vs baseline        : +4.42%
+
+Classification Report:
+------------------------------------------------------------
+              precision    recall  f1-score   support
+
+    negative       0.58      0.68      0.62      1409
+     neutral       0.47      0.33      0.39      3032
+    positive       0.87      0.91      0.89     13395
+
+    accuracy                           0.79     17836
+   macro avg       0.64      0.64      0.63     17836
+weighted avg       0.78      0.79      0.78     17836
+
+
+TF-IDF Configuration:
+------------------------------------------------------------
+max_features: 8000
+ngram_range: (1, 3)
+min_df: 3
+max_df: 0.9
+sublinear_tf: True
+
+
+Next Steps to Explore:
+------------------------------------------------------------
+1. Fine-tune ParsBERT for a potential +8-15% accuracy gain.
+2. Add numeric features (rate, likes, is_buyer) alongside TF-IDF.
+3. Re-examine neutral label definition to reduce ambiguity.
+4. Scale up to the full 6 M records using chunked processing.
