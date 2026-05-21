@@ -1,7 +1,20 @@
+# API Framework
 fastapi
 uvicorn[standard]
+
+# Database
+sqlalchemy
+aiosqlite
+
+# ML & NLP
 scikit-learn
 joblib
-pandas
 hazm
+numpy
+pandas
+
+# Data validation
 pydantic
+
+# Utilities
+python-dotenv
