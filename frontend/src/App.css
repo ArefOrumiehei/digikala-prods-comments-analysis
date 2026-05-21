@@ -1,0 +1,30 @@
+@font-face {
+  font-family: "Vazir";
+  src: url("./assets/fonts/Vazir.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Vazir";
+  src: url("./assets/fonts/Vazir-Medium.ttf") format("ttf");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Vazir";
+  src: url("./assets/fonts/Vazir-Bold.ttf") format("ttf");
+  font-weight: bold;
+  font-style: normal;
+}
+
+html,
+body,
+#root {
+  font-family: "Vazir", sans-serif;
+}
+
+* {
+  font-family: inherit;
+}
