@@ -64,12 +64,12 @@ export const deleteHistoryItem = async (id: number): Promise<void> => {
 
 export const searchProducts = async (
   q: string,
-  limit = 10
-): Promise<ProductSearchResult[]> => {
-  const { data } = await apiInstance.get<ProductSearchResult[]>(
-    "/products/search",
-    { params: { q, limit } }
-  );
+  page = 1,
+  size = 10
+): Promise<{ total: number; page: number; size: number; results: ProductSearchResult[] }> => {
+  const { data } = await apiInstance.get("/products/search", {
+    params: { q, page, size },
+  });
   return data;
 };
 
