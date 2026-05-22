@@ -308,7 +308,7 @@ export default function SentimentLanding() {
             <p className="text-white/80 mb-8 text-base">{t.ctaSubtitle}</p>
             {/* CTA on red background: white button — never another red */}
             <Link
-              to="/analyzer"
+              to="/text-analyzer"
               className="inline-flex items-center gap-2 bg-white font-bold px-8 py-3 rounded-xl transition-all hover:shadow-xl hover:-translate-y-0.5 text-base"
               style={{ color: DIGIKALA_RED }}
             >
@@ -321,15 +321,7 @@ export default function SentimentLanding() {
 
       {/* ── Footer ── */}
       <footer className="border-t border-gray-100 dark:border-gray-800">
-        <div className="max-w-5xl mx-auto px-4 py-8 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: DIGIKALA_RED }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-            </div>
-            <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{fa.appName}</span>
-          </div>
+        <div className="max-w-5xl mx-auto px-4 py-8 flex items-center justify-center">
           <p className="text-xs text-gray-300 dark:text-gray-600">
             پردازش زبان طبیعی فارسی · LinearSVC · TF-IDF
           </p>
