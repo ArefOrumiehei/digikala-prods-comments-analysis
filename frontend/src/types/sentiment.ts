@@ -67,6 +67,9 @@ export interface ProductSummary {
   neutral_pct: number;
   negative_pct: number;
   ai_summary: string | null;
+  ai_pros: string[] | null;
+  ai_cons: string[] | null;
+  ai_sentiment: string | null;
   last_updated: string | null;
 }
 
