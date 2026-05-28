@@ -5,10 +5,12 @@ import useProductStore from "../../stores/useProductStrore";
 import type { SentimentLabel, CommentItem } from "../../types/sentiment";
 import fa from "../../i18n/fa";
 import { RatingStars } from "../../components/common/RatingStars";
-import { IconFileAi, IconMoodEmpty, IconMoodHappy, IconMoodSad } from "@tabler/icons-react";
+import { IconMoodEmpty, IconMoodHappy, IconMoodSad, IconSparkles } from "@tabler/icons-react";
+import { useTypewriter } from "../../hooks/useTypeWriter";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
+
 
 const t = fa.products;
-const DIGIKALA_RED = "#E22424";
 
 const SENTIMENT_CONFIG: Record<
   SentimentLabel,
@@ -36,6 +38,261 @@ const SENTIMENT_CONFIG: Record<
     dotColor: "bg-red-500",
   },
 };
+
+
+function AiSummarySection({
+  summary,
+  pros,
+  cons,
+  totalComments,
+}: {
+  summary:       string | null;
+  pros:          string[] | null;
+  cons:          string[] | null;
+  totalComments: number;
+}) {
+  if (totalComments < 10) return null;
+
+  // Still generating in background
+  if (!summary && !pros?.length && !cons?.length) {
+    return (
+      <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 mb-4 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div
+            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+            style={{ background: "#E22424" }}
+          >
+            <IconSparkles size={14} color="white" />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded-full border-2 border-red-300 border-t-red-600 animate-spin" />
+            <p className="text-sm text-gray-400 dark:text-gray-500">
+              در حال تولید خلاصه هوشمند...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <AiSummaryCard
+      summary={summary ?? ""}
+      pros={pros ?? []}
+      cons={cons ?? []}
+    />
+  );
+}
+
+function AiSummaryCard({
+  summary,
+  pros,
+  cons,
+}: {
+  summary: string;
+  pros:    string[];
+  cons:    string[];
+}) {
+  const { displayed, isDone } = useTypewriter(summary, 14, true);
+
+  // ── Animation variants ────────────────────────────────────
+  const sectionVariants: Variants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: "easeOut" }
+    },
+  };
+
+  const listVariants: Variants = {
+    hidden: {},
+    visible: {
+      transition: {
+        // Each item staggers 80ms after the previous
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden:  { opacity: 0, x: 10 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+  };
+
+  const hasProsOrCons = pros.length > 0 || cons.length > 0;
+
+  return (
+    <div className="relative bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 mb-4 shadow-sm overflow-hidden">
+
+      {/* Ambient glow */}
+      <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full opacity-[0.06] blur-3xl pointer-events-none" style={{ background: "#E22424" }} />
+      <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full opacity-[0.04] blur-3xl pointer-events-none" style={{ background: "#6366f1" }} />
+
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-l from-red-50 to-indigo-50 dark:from-red-950/60 dark:to-indigo-950/60 border border-red-100 dark:border-red-900/50">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+          <span className="text-xs font-medium bg-gradient-to-l from-red-600 to-indigo-600 bg-clip-text text-transparent">
+            هوش مصنوعی
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <IconSparkles size={16} className="text-gray-300 dark:text-gray-600" />
+          <h2 className="font-bold text-gray-900 dark:text-gray-100 text-base">
+            {t.summaryTitle}
+          </h2>
+        </div>
+      </div>
+
+      {/* Gradient divider */}
+      <div className="h-px bg-gradient-to-l from-transparent via-gray-200 dark:via-gray-700 to-transparent mb-5" />
+
+      {/* Typewriter summary */}
+      <div className="mb-5">
+        <p
+          className="text-sm text-gray-700 dark:text-gray-300 leading-[2] text-right"
+          dir="rtl"
+        >
+          {displayed}
+          {!isDone && (
+            <span className="inline-block w-0.5 h-4 bg-red-500 mr-0.5 align-middle animate-[blink_0.8s_step-end_infinite]" />
+          )}
+        </p>
+      </div>
+
+      {/* Pros & Cons — AnimatePresence waits for isDone */}
+      <AnimatePresence>
+        {isDone && hasProsOrCons && (
+          <motion.div
+            key="pros-cons"
+            variants={sectionVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {/* Section divider */}
+            <div className="h-px bg-gradient-to-l from-transparent via-gray-100 dark:via-gray-800 to-transparent mb-5" />
+
+            <div className="grid grid-cols-2 gap-3">
+
+              {/* ── Pros ── */}
+              {pros.length > 0 && (
+                <motion.div
+                  variants={sectionVariants}
+                  className="bg-green-50 dark:bg-green-950/40 border border-green-100 dark:border-green-900/50 rounded-xl p-4"
+                >
+                  {/* Pros header */}
+                  <div className="flex items-center gap-1.5 mb-3">
+                    <div className="w-5 h-5 rounded-md bg-green-500 flex items-center justify-center shrink-0">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span className="text-xs font-bold text-green-700 dark:text-green-400">
+                      نقاط قوت
+                    </span>
+                  </div>
+
+                  {/* Animated list */}
+                  <motion.ul
+                    variants={listVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-2"
+                  >
+                    {pros.map((pro, i) => (
+                      <motion.li
+                        key={i}
+                        variants={itemVariants}
+                        className="flex items-start gap-2 text-right"
+                        dir="rtl"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0 mt-1.5" />
+                        <span className="text-xs text-green-800 dark:text-green-300 leading-relaxed">
+                          {pro}
+                        </span>
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+                </motion.div>
+              )}
+
+              {/* ── Cons ── */}
+              {cons.length > 0 && (
+                <motion.div
+                  variants={sectionVariants}
+                  className="bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-900/50 rounded-xl p-4"
+                >
+                  {/* Cons header */}
+                  <div className="flex items-center gap-1.5 mb-3">
+                    <div className="w-5 h-5 rounded-md bg-red-500 flex items-center justify-center shrink-0">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </div>
+                    <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                      نقاط ضعف
+                    </span>
+                  </div>
+
+                  {/* Animated list */}
+                  <motion.ul
+                    variants={listVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-2"
+                  >
+                    {cons.map((con, i) => (
+                      <motion.li
+                        key={i}
+                        variants={itemVariants}
+                        className="flex items-start gap-2 text-right"
+                        dir="rtl"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0 mt-1.5" />
+                        <span className="text-xs text-red-800 dark:text-red-300 leading-relaxed">
+                          {con}
+                        </span>
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+                </motion.div>
+              )}
+
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Footer — appears after typing + after pros/cons */}
+      <AnimatePresence>
+        {isDone && (
+          <motion.div
+            key="footer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: hasProsOrCons ? 0.6 : 0.2, duration: 0.4 }}
+            className="flex items-center gap-2 mt-5 pt-4 border-t border-gray-50 dark:border-gray-800"
+          >
+            <div className="w-5 h-5 rounded-md flex items-center justify-center bg-gradient-to-br from-red-500 to-indigo-600 shrink-0">
+              <IconSparkles size={11} color="white" stroke={2} />
+            </div>
+            <p className="text-xs text-gray-300 dark:text-gray-600">
+              خلاصه توسط هوش مصنوعی از نظرات کاربران تولید شده است
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+    </div>
+  );
+}
 
 
 function SentimentBar({
@@ -286,45 +543,12 @@ export default function ProductDetails() {
           </div>
         </div>
 
-        {/* ── AI Summary ── */}
-        {product.ai_summary && (
-          <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 mb-4 shadow-sm">
-            <div className="flex items-center gap-2 mb-4">
-              <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: DIGIKALA_RED }}
-              >
-                <IconFileAi size={18} stroke={2} color="white" />
-              </div>
-              <h2 className="font-bold text-gray-900 dark:text-gray-100 text-base">
-                {t.summaryTitle}
-              </h2>
-            </div>
-
-            {/* Summary sentences — split by " | " */}
-            <div className="space-y-2">
-              {product.ai_summary.split(" | ").map((sentence, i) => (
-                sentence.trim() && (
-                  <div
-                    key={i}
-                    className="flex items-start gap-2.5 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl"
-                  >
-                    <div
-                      className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
-                      style={{ background: DIGIKALA_RED }}
-                    />
-                    <p
-                      className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed text-right flex-1"
-                      dir="rtl"
-                    >
-                      {sentence.trim()}
-                    </p>
-                  </div>
-                )
-              ))}
-            </div>
-          </div>
-        )}
+        <AiSummarySection
+          summary={product.ai_summary}
+          pros={product.ai_pros}
+          cons={product.ai_cons}
+          totalComments={product.total_comments}
+        />
 
         {/* ── Comments ── */}
         <div>
