@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+import asyncio
 import pandas as pd
 from pathlib import Path
 
@@ -50,7 +51,8 @@ def _avg_rate(product_df: pd.DataFrame) -> float | None:
 
 
 # ── Helper: compute full product summary ──────────────────────
-def _compute_summary(product_id: int) -> dict | None:
+def _compute_summary_without_llm(product_id: int) -> dict | None:
+    """Computes everything instantly — no LLM call."""
     if _df.empty:
         return None
 
@@ -78,9 +80,6 @@ def _compute_summary(product_id: int) -> dict | None:
     neutral  = sentiments.count("neutral")
     negative = sentiments.count("negative")
 
-    bodies     = product_df["body"].dropna().astype(str).tolist()
-    ai_summary = summarize_comments(bodies, top_n=5)
-
     return {
         "product_id":     product_id,
         "title":          title,
@@ -94,9 +93,49 @@ def _compute_summary(product_id: int) -> dict | None:
         "positive_pct":   round(positive / total * 100, 2) if total > 0 else 0.0,
         "neutral_pct":    round(neutral  / total * 100, 2) if total > 0 else 0.0,
         "negative_pct":   round(negative / total * 100, 2) if total > 0 else 0.0,
-        "ai_summary":     ai_summary,
+        "ai_summary":     None,
+        "ai_pros":        None,
+        "ai_cons":        None,
+        "ai_sentiment":   None,
     }
 
+
+def _get_product_bodies(product_id: int) -> list[str]:
+    """Returns comment bodies for a product."""
+    product_df = _df[_df["product_id"] == product_id]
+    return product_df["body"].dropna().astype(str).tolist()
+
+async def _background_summarize(product_id: int, bodies: list[str]):
+    """
+    Runs after the response is already sent to the client.
+    Computes summary and updates DB cache.
+    """
+    from api.database import AsyncSessionLocal
+    from api.db_models import ProductSummary
+
+    try:
+        # Run blocking Ollama call in thread so it doesn't block event loop
+        loop = asyncio.get_event_loop()
+        summary_result = await loop.run_in_executor(
+            None,                          # default thread pool
+            lambda: summarize_comments(bodies, max_comments=15)
+        )
+
+        async with AsyncSessionLocal() as db:
+            result = await db.execute(
+                select(ProductSummary).where(ProductSummary.product_id == product_id)
+            )
+            record = result.scalar_one_or_none()
+            if record:
+                record.ai_summary   = summary_result["summary"]
+                record.ai_pros      = summary_result["pros"]
+                record.ai_cons      = summary_result["cons"]
+                record.ai_sentiment = summary_result["sentiment"]
+                await db.commit()
+                print(f"✓ Summary saved for product {product_id}")
+
+    except Exception as e:
+        print(f"⚠ Background summarization failed for product {product_id}: {e}")
 
 # ── Endpoints ─────────────────────────────────────────────────
 
@@ -146,16 +185,13 @@ async def search_products(
         "results": results,
     }
 
-
 @router.get("/{product_id}", response_model=ProductSummaryResponse)
 async def get_product_summary(
-    product_id: int,
-    db: AsyncSession = Depends(get_db),
+    product_id:       int,
+    background_tasks: BackgroundTasks,
+    db:               AsyncSession = Depends(get_db),
 ):
-    """
-    Get full sentiment summary for a product.
-    Checks DB cache first; computes and caches on first request.
-    """
+    # Cache hit → return immediately
     result = await db.execute(
         select(ProductSummary).where(ProductSummary.product_id == product_id)
     )
@@ -163,14 +199,21 @@ async def get_product_summary(
     if cached:
         return cached
 
-    summary = _compute_summary(product_id)
+    # Cache miss → compute everything EXCEPT summary
+    summary = _compute_summary_without_llm(product_id)
     if not summary:
         raise HTTPException(status_code=404, detail=f"Product {product_id} not found")
 
+    # Save to DB immediately (with ai_summary = None for now)
     db_summary = ProductSummary(**summary)
     db.add(db_summary)
     await db.commit()
     await db.refresh(db_summary)
+
+    # Kick off summarization in background — doesn't block response
+    bodies = _get_product_bodies(product_id)
+    if len(bodies) > 10:
+        background_tasks.add_task(_background_summarize, product_id, bodies)
 
     return db_summary
 
@@ -207,19 +250,19 @@ async def get_product_comments(
     comments = []
     for idx, (_, row) in enumerate(page_df.iterrows()):
         raw_label = row.get("sentiment")
-        if 'sentiment' in row and pd.notna(row['sentiment']):
-            sentiment = row['sentiment']
-            confidence = None
+        if raw_label is not None and str(raw_label).strip().lower() not in ("nan", "none", ""):
+            sentiment_label = str(raw_label).strip().lower()
+            confidence      = None
         else:
-            pred_result = predict(str(row.get('full_text_cleaned', '')))
-            sentiment = pred_result['sentiment']
-            confidence = pred_result['confidence']
+            pred_result     = predict(str(row.get("full_text_cleaned", "")))
+            sentiment_label = pred_result["sentiment"]
+            confidence      = pred_result["confidence"]
 
         comments.append(
             CommentItem(
                 id         = int(row["id_comment"]) if pd.notna(row.get("id_comment")) else idx,
                 body       = str(row["body"]) if pd.notna(row.get("body")) else None,
-                sentiment  = sentiment,
+                sentiment  = sentiment_label,
                 confidence = confidence,
                 rate       = float(row["rate"]) if pd.notna(row.get("rate")) else None,  # FIX #2
                 created_at = str(row["created_at"]) if pd.notna(row.get("created_at")) else None,
