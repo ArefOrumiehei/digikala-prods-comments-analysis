@@ -7,7 +7,7 @@
 #   The API request/response shapes live in models.py (Pydantic).
 # ============================================================
 
-from sqlalchemy import Column, Integer, String, Float, DateTime, Text
+from sqlalchemy import Column, Integer, String, Float, DateTime, Text, JSON
 from sqlalchemy.sql import func
 from api.database import Base
 
@@ -51,6 +51,9 @@ class ProductSummary(Base):
     negative_pct    = Column(Float,   default=0.0)
 
     # Extractive summary of comment bodies
-    ai_summary      = Column(Text,    nullable=True)
+    ai_summary   = Column(Text, nullable=True)
+    ai_pros      = Column(JSON, nullable=True)
+    ai_cons      = Column(JSON, nullable=True)
+    ai_sentiment = Column(String, nullable=True)
 
     last_updated    = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

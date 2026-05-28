@@ -73,7 +73,10 @@ class ProductSummaryResponse(BaseModel):
     neutral_pct:    float
     negative_pct:   float
 
-    ai_summary:     Optional[str]
+    ai_summary:   Optional[str]
+    ai_pros:      Optional[list[str]]
+    ai_cons:      Optional[list[str]]
+    ai_sentiment: Optional[str]
     last_updated:   Optional[datetime]
 
     class Config:
