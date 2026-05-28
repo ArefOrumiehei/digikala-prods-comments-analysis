@@ -39,6 +39,7 @@ interface ProductState {
   productError:     string;
 
   fetchProduct: (id: number) => Promise<void>;
+  _pollForSummary: (id: number) => void;
   clearProduct: () => void;
 
   // ── Comments ──────────────────────────────────────────────
@@ -107,6 +108,10 @@ const useProductStore = create<ProductState>((set, get) => ({
       const product = await getProductSummary(id);
       set({ product });
       get().fetchComments(id);
+
+      if (!product.ai_summary) {
+        get()._pollForSummary(id);
+      }
     } catch (err) {
       set({
         productError: err instanceof Error ? err.message : "محصول یافت نشد",
@@ -114,6 +119,29 @@ const useProductStore = create<ProductState>((set, get) => ({
     } finally {
       set({ isProductLoading: false });
     }
+  },
+
+  _pollForSummary: async (id: number) => {
+    const MAX_ATTEMPTS = 10;   // 10 × 4s = 40s max wait
+    let attempts = 0;
+
+    const poll = async () => {
+      attempts++;
+      try {
+        const product = await getProductSummary(id);
+        if (product.ai_summary) {
+          set({ product });   // update store with summary
+          return;
+        }
+        if (attempts < MAX_ATTEMPTS) {
+          setTimeout(poll, 4000);
+        }
+      } catch {
+        // silent
+      }
+    };
+
+    setTimeout(poll, 4000);   // first check after 4s
   },
 
   clearProduct: () =>
