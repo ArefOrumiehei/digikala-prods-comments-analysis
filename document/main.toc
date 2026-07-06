@@ -1,0 +1,69 @@
+\contentsline {section}{\numberline {1}مقدمه}{1}{section.0.1}%
+\contentsline {subsection}{\numberline {1.1}تحلیل احساسات \lr {(Sentiment Analysis)}}{1}{subsection.0.1.1}%
+\contentsline {subsection}{\numberline {1.2}اهمیت تحلیل نظرات کاربران}{1}{subsection.0.1.2}%
+\contentsline {subsection}{\numberline {1.3}دلیل انتخاب دیجی‌کالا}{2}{subsection.0.1.3}%
+\contentsline {subsection}{\numberline {1.4}هدف پروژه}{2}{subsection.0.1.4}%
+\contentsline {section}{\numberline {2}تعریف مسئله}{3}{section.0.2}%
+\contentsline {subsection}{\numberline {2.1}مسئله‌ای که پروژه حل می‌کند}{3}{subsection.0.2.1}%
+\contentsline {subsection}{\numberline {2.2}ورودی و خروجی سیستم}{3}{subsection.0.2.2}%
+\contentsline {subsection}{\numberline {2.3}محدودیت‌های پروژه}{4}{subsection.0.2.3}%
+\contentsline {subsection}{\numberline {2.4}کاربردهای سیستم}{4}{subsection.0.2.4}%
+\contentsline {section}{\numberline {3}ابزارها و فناوری‌های استفاده‌شده}{5}{section.0.3}%
+\contentsline {subsection}{\numberline {3.1}زبان برنامه‌نویسی}{5}{subsection.0.3.1}%
+\contentsline {subsection}{\numberline {3.2}ابزارهای یادگیری ماشین و پردازش داده}{5}{subsection.0.3.2}%
+\contentsline {subsection}{\numberline {3.3}ابزارهای توسعه Backend}{6}{subsection.0.3.3}%
+\contentsline {subsection}{\numberline {3.4}ابزارهای توسعه Frontend}{7}{subsection.0.3.4}%
+\contentsline {section}{\numberline {4}معرفی دیتاست‌ها}{7}{section.0.4}%
+\contentsline {subsection}{\numberline {4.1}دیتاست نظرات کاربران}{8}{subsection.0.4.1}%
+\contentsline {subsection}{\numberline {4.2}دیتاست محصولات}{8}{subsection.0.4.2}%
+\contentsline {subsection}{\numberline {4.3}تعداد رکوردها}{9}{subsection.0.4.3}%
+\contentsline {subsection}{\numberline {4.4}نحوه برچسب‌گذاری احساسات}{10}{subsection.0.4.4}%
+\contentsline {subsection}{\numberline {4.5}دلیل استفاده از نمونه 100 تا 200 هزار رکورد}{10}{subsection.0.4.5}%
+\contentsline {section}{\numberline {5}پیش‌پردازش داده‌ها}{11}{section.0.5}%
+\contentsline {subsection}{\numberline {5.1}ادغام دیتاست‌ها \lr {(Dataset Merging)}}{11}{subsection.0.5.1}%
+\contentsline {subsection}{\numberline {5.2}حذف داده‌های ناقص و نامعتبر}{11}{subsection.0.5.2}%
+\contentsline {subsection}{\numberline {5.3}پاک‌سازی متن \lr {(Text Cleaning)}}{11}{subsection.0.5.3}%
+\contentsline {subsection}{\numberline {5.4}نرمال‌سازی متن (Normalization)}{12}{subsection.0.5.4}%
+\contentsline {subsection}{\numberline {5.5}توکن‌سازی (Tokenization)}{12}{subsection.0.5.5}%
+\contentsline {subsection}{\numberline {5.6}حذف کلمات توقف \lr {(Stop Words Removal)}}{13}{subsection.0.5.6}%
+\contentsline {subsection}{\numberline {5.7}آماده‌سازی نهایی متن با Hazm}{13}{subsection.0.5.7}%
+\contentsline {section}{\numberline {6}استخراج ویژگی‌ها \lr {(Feature Engineering)}}{14}{section.0.6}%
+\contentsline {subsection}{\numberline {6.1}ویژگی‌های متنی \lr {(Text Features)}}{15}{subsection.0.6.1}%
+\contentsline {subsection}{\numberline {6.2}ویژگی‌های امتیازدهی \lr {(Rating Features)}}{15}{subsection.0.6.2}%
+\contentsline {subsection}{\numberline {6.3}ویژگی‌های پیشنهاد خرید \lr {(Recommendation Features)}}{15}{subsection.0.6.3}%
+\contentsline {subsection}{\numberline {6.4}ویژگی‌های وضعیت خریدار \lr {(Buyer Features)}}{15}{subsection.0.6.4}%
+\contentsline {subsection}{\numberline {6.5}ویژگی‌های قیمت \lr {(Price Features)}}{16}{subsection.0.6.5}%
+\contentsline {subsection}{\numberline {6.6}ویژگی‌های واکنش کاربران \lr {(Reaction Features)}}{16}{subsection.0.6.6}%
+\contentsline {subsection}{\numberline {6.7}ویژگی‌های زمانی \lr {(Temporal Features)}}{16}{subsection.0.6.7}%
+\contentsline {section}{\numberline {7}آموزش مدل‌های یادگیری ماشین}{17}{section.0.7}%
+\contentsline {subsection}{\numberline {7.1}مدل \lr {Logistic Regression}}{17}{subsection.0.7.1}%
+\contentsline {subsection}{\numberline {7.2}مدل \lr {Linear Support Vector Machine (Linear SVM)}}{18}{subsection.0.7.2}%
+\contentsline {subsection}{\numberline {7.3}مدل \lr {Random Forest}}{19}{subsection.0.7.3}%
+\contentsline {subsection}{\numberline {7.4}مقایسه اولیه مدل‌ها}{20}{subsection.0.7.4}%
+\contentsline {section}{\numberline {8}بهبود مدل \lr {(Model Improvement)}}{21}{section.0.8}%
+\contentsline {subsection}{\numberline {8.1}بهینه‌سازی ویژگی‌های متنی با TF-IDF}{21}{subsection.0.8.1}%
+\contentsline {subsection}{\numberline {8.2}تنظیم ابرپارامترها با GridSearchCV}{22}{subsection.0.8.2}%
+\contentsline {subsection}{\numberline {8.3}متعادل‌سازی داده‌ها با SMOTE}{23}{subsection.0.8.3}%
+\contentsline {subsection}{\numberline {8.4}استفاده از \lr {Voting Ensemble}}{23}{subsection.0.8.4}%
+\contentsline {subsection}{\numberline {8.5}انتخاب مدل نهایی}{23}{subsection.0.8.5}%
+\contentsline {section}{\numberline {9}نتایج و ارزیابی مدل}{25}{section.0.9}%
+\contentsline {subsection}{\numberline {9.1}نتایج دقت (Accuracy)}{25}{subsection.0.9.1}%
+\contentsline {subsection}{\numberline {9.2}نتایج معیار F1-Score}{25}{subsection.0.9.2}%
+\contentsline {subsection}{\numberline {9.3}ماتریس درهم‌ریختگی \lr {(Confusion Matrix)}}{26}{subsection.0.9.3}%
+\contentsline {subsection}{\numberline {9.4}تحلیل نتایج}{28}{subsection.0.9.4}%
+\contentsline {section}{\numberline {10}طراحی و پیاده‌سازی Backend}{28}{section.0.10}%
+\contentsline {subsection}{\numberline {10.1}استفاده از FastAPI}{29}{subsection.0.10.1}%
+\contentsline {subsection}{\numberline {10.2}ساختار Route ها}{29}{subsection.0.10.2}%
+\contentsline {subsection}{\numberline {10.3}پایگاه داده}{29}{subsection.0.10.3}%
+\contentsline {subsection}{\numberline {10.4}فرآیند پیش‌بینی احساسات \lr {(Prediction Flow)}}{30}{subsection.0.10.4}%
+\contentsline {subsection}{\numberline {10.5}مدیریت تاریخچه تحلیل‌ها}{30}{subsection.0.10.5}%
+\contentsline {subsection}{\numberline {10.6}خلاصه‌سازی نظرات محصولات \lr {(Product Summary)}}{31}{subsection.0.10.6}%
+\contentsline {section}{\numberline {11}طراحی و پیاده‌سازی Frontend}{32}{section.0.11}%
+\contentsline {subsection}{\numberline {11.1}معماری Frontend}{33}{subsection.0.11.1}%
+\contentsline {subsection}{\numberline {11.2}صفحات سیستم}{33}{subsection.0.11.2}%
+\contentsline {subsection}{\numberline {11.3}ارتباط با Backend}{39}{subsection.0.11.3}%
+\contentsline {subsection}{\numberline {11.4}مدیریت وضعیت برنامه \lr {(State Management)}}{39}{subsection.0.11.4}%
+\contentsline {subsection}{\numberline {11.5}طراحی رابط کاربری}{40}{subsection.0.11.5}%
+\contentsline {section}{\numberline {12}‌پیشنهادات آینده و دسترسی به کد منبع و مستندات}{40}{section.0.12}%
+\contentsline {subsection}{\numberline {12.1}پیشنهادات برای توسعه آینده}{40}{subsection.0.12.1}%
+\contentsline {subsection}{\numberline {12.2}دسترسی به کد منبع و مستندات}{41}{subsection.0.12.2}%

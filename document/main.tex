@@ -1,0 +1,55 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{xepersian}
+
+\settextfont{XB Yas}
+\setlatintextfont{Times New Roman}
+
+\linespread{1.5}
+
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	urlcolor=blue,
+	citecolor=blue
+}
+
+\graphicspath{{images/}}
+
+%---------------------------------------
+\begin{document}
+	\input{title}
+	
+	\pagenumbering{roman}
+
+	\tableofcontents
+	
+	\listoffigures
+	
+	\listoftables
+	
+	\clearpage
+	
+	\pagenumbering{arabic}
+	
+	\include{context}
+	
+	% پیوست
+	%\appendix
+	%\include{appendix}
+	
+	
+\end{document}

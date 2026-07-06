@@ -26,3 +26,12 @@ Thumbs.db
 
 # DataBase
 backend/*.db
+
+# Latex files
+document/*.aux
+document/*.bbl
+document/*.blg
+document/*.lof
+document/*.lot
+document/*.gz
+document/*.out
